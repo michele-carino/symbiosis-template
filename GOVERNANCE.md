@@ -47,7 +47,7 @@ Every modification—whether initiated by a human developer or an AI agent—is 
 
 ```text
 /symbiosis/
-├── README.md            # Vision, manifesto, core principles, and repository layout
+├── GOVERNANCE.md        # Vision, manifesto, core principles, and repository layout
 ├── GUARDRAILS.md        # Deterministic algorithm, execution workflow, and system directives
 ├── AGENTS.md            # Universal entrypoint redirecting agents to GUARDRAILS.md
 ├── CONTRIBUTING.md      # Git hygiene, Justfile skill contract, and PR protocols
