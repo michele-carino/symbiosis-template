@@ -69,3 +69,7 @@ ollama-models-install:
 # List installed Ollama models
 ollama-models-list:
     @docker compose exec -T ollama ollama list
+
+# Ask a question to a specific Ollama model (usage: just ollama-ask <model> <prompt>)
+ollama-models-prompt model prompt:
+    @docker compose exec -it ollama ollama run {{model}} "{{prompt}}"
