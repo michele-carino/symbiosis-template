@@ -43,7 +43,15 @@ Every modification—whether initiated by a human developer or an AI agent—is 
 
 ---
 
-## 4. Repository Structure
+## 4. Local AI Facility (Ollama Integration)
+To uphold the principle of local execution and privacy, Symbiosis includes a fully self-contained, offline AI facility powered by Ollama.
+* **Containerized & Hardware-Agnostic:** The AI engine runs locally via Docker Compose, supporting both CPU-only execution and hardware acceleration (such as AMD Vulkan GPU mode) out-of-the-box.
+* **Automated Model Bootstrap:** The environment features an on-demand initialization workflow (ollama-models-install) driven by a declarative models.txt file, ensuring that required models are automatically verified and pulled into local volumes.
+* **Frictionless Orchestration:** Every operation—from starting the engine to bootstrapping models, listing installed versions, or querying a model—is exposed locally through standardized tasks in the Justfile.
+
+[`More information here`](LOCAL-AI.md).
+
+## 5. Repository Structure
 
 ```text
 /symbiosis/
@@ -54,6 +62,7 @@ Every modification—whether initiated by a human developer or an AI agent—is 
 ├── CHANGELOG.md         # Immutable version history following Keep a Changelog 1.1.0
 ├── Justfile             # Executable contract of project skills and local commands
 ├── LICENSE              # GNU General Public License v3.0 (GPLv3)
+├── Dockerfile.d/        # Local infrastructure configurations (Ollama engine & bootstrap init)
 └── specs/               # Chronological history of human specifications
     ├── _template.md     # Base specification template
     └── YYYY/MM/         # Chronologically ordered spec files (e.g., YYYY-MM-DD-task.md)
