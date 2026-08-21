@@ -53,6 +53,11 @@ ollama-up-vulkan:
     @echo "Starting Ollama IDE facility (Vulkan GPU mode)..."
     docker compose -f docker-compose.yml -f docker-compose.vulkan.override.yml up --build -d
 
+# Start the IDE AI facility (Ollama) using NVIDIA acceleration
+ollama-up-nvidia:
+    @echo "Starting Ollama IDE facility (NVIDIA GPU mode)..."
+    docker compose -f docker-compose.yml -f docker-compose.nvidia.override.yml up --build -d
+
 # Stop the IDE AI facility
 ollama-down:
     @echo "Stopping Ollama IDE facility..."
