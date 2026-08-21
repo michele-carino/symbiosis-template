@@ -12,3 +12,6 @@ qwen2.5:3b
 # --- Fast Tab-Autocomplete Engine ---
 # Sub-gigabyte model providing instant, lag-free inline autocompletion (similar to Copilot).
 qwen2.5-coder:1.5b
+
+# --- Just to run tests ---
+all-minilm
