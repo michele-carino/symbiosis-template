@@ -49,7 +49,7 @@ To uphold the principle of local execution and privacy, Symbiosis includes a ful
 * **Automated Model Bootstrap:** The environment features an on-demand initialization workflow (ollama-models-install) driven by a declarative models.txt file, ensuring that required models are automatically verified and pulled into local volumes.
 * **Frictionless Orchestration:** Every operation—from starting the engine to bootstrapping models, listing installed versions, or querying a model—is exposed locally through standardized tasks in the Justfile.
 
-[`More information here`](./LOCAL-AI.md).
+[`Usage instructions here`](./LOCAL-AI.md).
 
 ## 5. Repository Structure
 
