@@ -24,7 +24,7 @@ services:
     image: ghcr.io/open-webui/open-webui:main
     container_name: symbiosis_ollama_webui
     ports:
-      - "127.0.0.1:3000:${WEBUI_PORT}"
+      - "127.0.0.1:${WEBUI_PORT_HOST}:${WEBUI_PORT}"
     environment:
       - OLLAMA_BASE_URL=http://ollama:${OLLAMA_PORT}
       - PORT=${WEBUI_PORT}
