@@ -43,20 +43,28 @@ dev:
 
 # --- IDE Facilities: Ollama (AI Engine) ---
 
-# Start the IDE AI facility (Ollama) using CPU (default)
-ollama-up:
-    @echo "Starting Ollama IDE facility (CPU mode)..."
-    docker compose up --build -d
+# Build and setup Ollama AI facility using the specified mode (defaults to cpu)
+ollama-build mode="cpu":
+    @echo "Starting Ollama facility ({{mode}} mode)..."
+    @just ollama-up "{{mode}}"
 
-# Start the IDE AI facility (Ollama) using AMD Vulkan acceleration
-ollama-up-vulkan:
-    @echo "Starting Ollama IDE facility (Vulkan GPU mode)..."
-    docker compose -f docker-compose.yml -f docker-compose.vulkan.override.yml up --build -d
+    @echo "📥 Installing models and setting up Continue.dev..."
+    @just ollama-models-install
+    @echo "Ollama facility is fully ready for use!"
 
-# Start the IDE AI facility (Ollama) using NVIDIA acceleration
-ollama-up-nvidia:
-    @echo "Starting Ollama IDE facility (NVIDIA GPU mode)..."
-    docker compose -f docker-compose.yml -f docker-compose.nvidia.override.yml up --build -d
+# Start the IDE AI facility (Ollama) with a specific mode: cpu (default), vulkan, or nvidia
+ollama-up mode="cpu":
+    @echo "Starting Ollama IDE facility ({{mode}} mode)..."
+    @if [ "{{mode}}" = "vulkan" ]; then \
+        docker compose -f docker-compose.yml -f docker-compose.vulkan.override.yml up --build --wait -d; \
+    elif [ "{{mode}}" = "nvidia" ]; then \
+        docker compose -f docker-compose.yml -f docker-compose.nvidia.override.yml up --build --wait -d; \
+    elif [ "{{mode}}" = "cpu" ]; then \
+        docker compose up --build --wait -d; \
+    else \
+        echo "Error: Unknown mode '{{mode}}'. Use 'cpu', 'vulkan', or 'nvidia'."; \
+        exit 1; \
+    fi
 
 # Stop the IDE AI facility
 ollama-down:
@@ -67,9 +75,13 @@ ollama-down:
 ollama-logs:
     docker compose logs -f ollama
 
-# Install Ollama models
+# Install Ollama models and generate Continue config
 ollama-models-install:
     docker compose --profile manual run --rm ollama-init
+    # Configure continue.dev plugin
+    mkdir -p ./.continue
+    cp ./Dockerfile.d/ollama-init/output/continue.dev/config.json ./.continue/config.json
+    echo "Continue.dev config file saved at ~/.continue/config.json"
 
 # List installed Ollama models
 ollama-models-list:

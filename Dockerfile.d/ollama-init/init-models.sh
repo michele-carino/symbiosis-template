@@ -15,17 +15,23 @@ if [ ! -f "$MODELS_FILE" ]; then
     exit 1
 fi
 
-while read -r model || [ -n "$model" ]; do
-    # Rimuovi eventuali ritorni a capo Windows (CRLF)
-    model=$(echo "$model" | tr -d '\r')
+while IFS=, read -r model purpose || [ -n "$model" ]; do
+    # Remove spaces and Windows carriage returns (CRLF)
+    model=$(echo "$model" | tr -d '\r' | xargs)
+    purpose=$(echo "$purpose" | tr -d '\r' | xargs)
 
-    # Salta commenti e righe vuote
+    # Skip comments
     case "$model" in
         \#*|'') continue ;;
     esac
 
+    # Verify model has a name
+    if [ -z "$model" ]; then
+        continue
+    fi
+
     echo ""
-    echo "👉 Checking/Pulling model: [ ${model} ]"
+    echo "👉 Pulling model: [ ${model} ]"
 
     curl -s -X POST "${HOST}/api/pull" \
          -H "Content-Type: application/json" \
@@ -33,9 +39,20 @@ while read -r model || [ -n "$model" ]; do
 
     echo ""
     echo "✅ Finished processing: ${model}"
+
 done < "$MODELS_FILE"
 
 echo ""
 echo "=========================================="
-echo " All models processed successfully!"
+echo " All models downloaded successfully!"
 echo "=========================================="
+
+echo ""
+echo "=========================================="
+echo " Creating IDE config files..."
+echo "=========================================="
+
+mkdir -p /output
+
+# continue.dev
+sh /continue.dev/config.sh

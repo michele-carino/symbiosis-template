@@ -52,7 +52,7 @@ If you are using JetBrains AI Assistant or third-party plugins (such as *Continu
 * **URL:** `http://localhost:11434` (or your custom `${OLLAMA_PORT}`)
 
 
-6. Select the model you downloaded via `models.txt` (e.g., `llama3` or `deepseek-coder`).
+6. Select the model you downloaded via `models.csv` (e.g., `llama3` or `deepseek-coder`).
 
 ---
 

@@ -1,0 +1,77 @@
+{
+  "models": [
+    {
+      "title": "qwen2.5-coder:7b (reasoning)",
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "apiBase": "http://127.0.0.1:11434"
+    },
+                {
+      "title": "qwen2.5-coder:7b (chat)",
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b",
+      "apiBase": "http://127.0.0.1:11434"
+    },
+                {
+      "title": "qwen2.5:3b (general)",
+      "provider": "ollama",
+      "model": "qwen2.5:3b",
+      "apiBase": "http://127.0.0.1:11434"
+    }
+  ],
+  "tabAutocompleteModel": {
+    "title": "Ollama Autocomplete (qwen2.5-coder:1.5b)",
+    "provider": "ollama",
+    "model": "qwen2.5-coder:1.5b",
+    "apiBase": "http://127.0.0.1:11434"
+  },
+  "embeddingsProvider": {
+    "provider": "ollama",
+    "model": "nomic-embed-text",
+    "apiBase": "http://127.0.0.1:11434"
+  },
+  "rerankModel": {
+    "provider": "ollama",
+    "model": "bge-m3",
+    "apiBase": "http://127.0.0.1:11434"
+  },
+  "customCommands": [
+    {
+      "name": "test",
+      "prompt": "Write comprehensive unit tests for the selected code using the project's testing framework.",
+      "description": "Write unit tests for selected code"
+    },
+    {
+      "name": "refactor",
+      "prompt": "Refactor the selected code to improve readability, performance, and maintainability.",
+      "description": "Refactor code for better quality"
+    },
+    {
+      "name": "explain",
+      "prompt": "Explain the selected code clearly and concisely.",
+      "description": "Explain selected code"
+    },
+    {
+      "name": "fix",
+      "prompt": "Analyze the selected code or error message, identify the root cause of the bug, and provide a corrected implementation.",
+      "description": "Fix bugs or error messages"
+    },
+    {
+      "name": "docs",
+      "prompt": "Write clear, professional documentation/docstrings for the selected code.",
+      "description": "Write docstrings and documentation"
+    },
+    {
+      "name": "optimize",
+      "prompt": "Optimize the selected code for better time and space complexity.",
+      "description": "Optimize code performance"
+    }
+  ],
+  "contextProviders": [
+    { "name": "code" },
+    { "name": "docs" },
+    { "name": "diff" },
+    { "name": "folder" },
+    { "name": "terminal" }
+  ]
+}

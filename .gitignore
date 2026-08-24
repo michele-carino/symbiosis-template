@@ -1,0 +1,2 @@
+# git ignored cause the continue.dev config is generated automatically on suggested models
+.continue
