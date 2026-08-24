@@ -3,13 +3,13 @@ services:
     build:
       context: ./Dockerfile.d/ollama
       args:
-        - OLLAMA_PORT=${OLLAMA_PORT:-11434}
+        - OLLAMA_PORT=${OLLAMA_PORT}
         - OLLAMA_BASE_IMAGE=ollama/ollama:latest
     container_name: symbiosis_ollama
     ports:
-      - "127.0.0.1:${OLLAMA_PORT:-11434}:${OLLAMA_PORT:-11434}"
+      - "127.0.0.1:${OLLAMA_PORT}:${OLLAMA_PORT}"
     environment:
-      - OLLAMA_HOST=0.0.0.0:${OLLAMA_PORT:-11434}
+      - OLLAMA_HOST=0.0.0.0:${OLLAMA_PORT}
     volumes:
       - symbiosis_ollama_data:/root/.ollama
     restart: unless-stopped
@@ -25,12 +25,13 @@ services:
     build:
       context: ./Dockerfile.d/ollama-init
       dockerfile: Dockerfile
+      target: cpu
     container_name: symbiosis_ollama_init
     depends_on:
       ollama:
         condition: service_healthy
     environment:
-      - OLLAMA_PORT=${OLLAMA_PORT:-11434}
+      - OLLAMA_PORT=${OLLAMA_PORT}
     profiles:
       - manual
     volumes:

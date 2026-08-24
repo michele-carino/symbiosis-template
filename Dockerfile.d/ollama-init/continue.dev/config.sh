@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
 set -e
 
-PORT="${OLLAMA_PORT:-11434}"
-MODELS_FILE="/models.txt"
+PORT="${OLLAMA_PORT}"
+MODELS_FILE="/models.csv"
 
 echo "=========================================="
-echo " Generating Continue.dev Config..."
+echo " Generating Continue.dev YAML Config..."
 echo "=========================================="
 
 if [ ! -f "$MODELS_FILE" ]; then
@@ -13,13 +13,11 @@ if [ ! -f "$MODELS_FILE" ]; then
     exit 1
 fi
 
-MODELS_JSON=""
-AUTO_MODEL=""
-EMBEDDING_MODEL=""
-RERANK_MODEL=""
-
+MODELS_YAML=""
 has_chat=0
 has_autocomplete=0
+EMBEDDING_MODEL=""
+RERANK_MODEL=""
 
 while IFS=, read -r model purpose || [ -n "$model" ]; do
     model=$(echo "$model" | tr -d '\r' | xargs)
@@ -35,37 +33,67 @@ while IFS=, read -r model purpose || [ -n "$model" ]; do
     fi
 
     case "$purpose" in
-        reasoning|chat|general)
+        reasoning)
             has_chat=1
-MODEL_BLOCK="    {
-      \"title\": \"${model} (${purpose})\",
-      \"provider\": \"ollama\",
-      \"model\": \"${model}\",
-      \"apiBase\": \"http://127.0.0.1:${PORT}\"
-    }"
-                    if [ -z "$MODELS_JSON" ]; then
-                        MODELS_JSON="$MODEL_BLOCK"
-                    else
-                        # Metti la virgola e vai a capo fisicamente premendo invio
-                        MODELS_JSON="${MODELS_JSON},
-            ${MODEL_BLOCK}"
-                    fi
+            MODEL_BLOCK="  - name: \"${model} (${purpose})\"
+    provider: ollama
+    model: \"${model}\"
+    apiBase: \"http://127.0.0.1:${PORT}\"
+    roles:
+      - chat
+      - edit"
+            ;;
+        chat|general)
+            has_chat=1
+            MODEL_BLOCK="  - name: \"${model} (${purpose})\"
+    provider: ollama
+    model: \"${model}\"
+    apiBase: \"http://127.0.0.1:${PORT}\"
+    roles:
+      - chat
+      - edit
+      - apply"
             ;;
         autocomplete)
             has_autocomplete=1
-            AUTO_MODEL="$model"
+            MODEL_BLOCK="  - name: \"Ollama Autocomplete (${model})\"
+    provider: ollama
+    model: \"${model}\"
+    apiBase: \"http://127.0.0.1:${PORT}\"
+    roles:
+      - autocomplete"
             ;;
         embedding)
             EMBEDDING_MODEL="$model"
+            MODEL_BLOCK="  - name: \"Nomic Embed\"
+    provider: ollama
+    model: \"${model}\"
+    apiBase: \"http://127.0.0.1:${PORT}\"
+    roles:
+      - embed"
             ;;
         rerank)
             RERANK_MODEL="$model"
+            MODEL_BLOCK="  - name: \"BGE Rerank\"
+    provider: ollama
+    model: \"${model}\"
+    apiBase: \"http://127.0.0.1:${PORT}\"
+    roles:
+      - rerank"
             ;;
         *)
             echo "Error: Unknown purpose '$purpose' for model '$model' in $models.txt"
             exit 1
             ;;
     esac
+
+    if [ -z "$MODELS_YAML" ]; then
+        MODELS_YAML="$MODEL_BLOCK"
+    else
+        MODELS_YAML="${MODELS_YAML}
+${MODEL_BLOCK}"
+    fi
+
 done < "$MODELS_FILE"
 
 # Integrity checks
@@ -89,26 +117,21 @@ if [ -z "$RERANK_MODEL" ]; then
     exit 1
 fi
 
-# Copy template and replace placeholders
-cp /continue.dev/config.json /tmp/config.json
-
-sed -i "s|\${PORT}|${PORT}|g" /tmp/config.json
-sed -i "s|\${AUTO_MODEL}|${AUTO_MODEL}|g" /tmp/config.json
-sed -i "s|\${EMBEDDING_MODEL}|${EMBEDDING_MODEL}|g" /tmp/config.json
-sed -i "s|\${RERANK_MODEL}|${RERANK_MODEL}|g" /tmp/config.json
+# Copia il template YAML e sostituisce i placeholder
+cp /continue.dev/config.yaml /tmp/config.yaml
 
 mkdir -p /output/continue.dev
 
-printf '%s\n' "$MODELS_JSON" > /tmp/models_block.txt
+printf '%s\n' "$MODELS_YAML" > /tmp/models_block.txt
 awk '
     NR==FNR { block = block $0 "\n"; next }
     /__MODELS_PLACEHOLDER__/ { printf "%s", block; next }
     { print }
-' /tmp/models_block.txt /tmp/config.json > /tmp/config.json.tmp && mv /tmp/config.json.tmp /output/continue.dev/config.json
+' /tmp/models_block.txt /tmp/config.yaml > /tmp/config.yaml.tmp && mv /tmp/config.yaml.tmp /output/continue.dev/config.yaml
 
-cat /output/continue.dev/config.json
+cat /output/continue.dev/config.yaml
 
 echo ""
 echo "=========================================="
-echo " Continue.dev config file created successfully!"
+echo " Continue.dev config.yaml created successfully!"
 echo "=========================================="

@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 set -e
 
-PORT="${OLLAMA_PORT:-11434}"
+PORT="${OLLAMA_PORT}"
 HOST="http://ollama:${PORT}"
-MODELS_FILE="/models.txt"
+MODELS_FILE="/models.csv"
 
 echo "=========================================="
 echo " Starting Ollama Models Auto-Loader..."

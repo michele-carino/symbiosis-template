@@ -1,0 +1,7 @@
+# model,purpose
+qwen2.5:3b,reasoning
+qwen2.5:3b,chat
+qwen2.5:3b,general
+qwen2.5-coder:1.5b,autocomplete
+nomic-embed-text,embedding
+bge-m3,rerank

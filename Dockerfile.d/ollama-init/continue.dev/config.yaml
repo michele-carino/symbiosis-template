@@ -1,0 +1,33 @@
+name: Local Config
+version: 1.0.0
+schema: v1
+
+models:
+__MODELS_PLACEHOLDER__
+
+prompts:
+  - name: test
+    description: Write unit tests for selected code
+    prompt: Write comprehensive unit tests for the selected code using the project's testing framework. {{{ input }}}
+  - name: refactor
+    description: Refactor code for better quality
+    prompt: Refactor the selected code to improve readability, performance, and maintainability. {{{ input }}}
+  - name: explain
+    description: Explain selected code
+    prompt: Explain the selected code clearly and concisely. {{{ input }}}
+  - name: fix
+    description: Fix bugs or error messages
+    prompt: Analyze the selected code or error message, identify the root cause of the bug, and provide a corrected implementation. {{{ input }}}
+  - name: docs
+    description: Write docstrings and documentation
+    prompt: Write clear, professional documentation/docstrings for the selected code. {{{ input }}}
+  - name: optimize
+    description: Optimize code performance
+    prompt: Optimize the selected code for better time and space complexity. {{{ input }}}
+
+context:
+  - provider: code
+  - provider: docs
+  - provider: diff
+  - provider: folder
+  - provider: terminal

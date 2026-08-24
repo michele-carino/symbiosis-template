@@ -7,3 +7,7 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+
+  ollama-init:
+    build:
+      target: nvidia
